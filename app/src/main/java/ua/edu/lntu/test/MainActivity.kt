@@ -45,6 +45,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp()
 {
+    CounterPage()
+}
+
+@Composable
+fun CounterPage()
+{
     var counter by remember { mutableStateOf(1) }
 
     Column (
