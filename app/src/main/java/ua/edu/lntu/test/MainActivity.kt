@@ -31,7 +31,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+
+
 import ua.edu.lntu.test.ui.theme.TestTheme
+
+data class ListItem(val title: String, val description: String)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +61,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyApp()
+                    HorizontalList()
+                    //VerticalScrollableList()
+                    //VerticalGridList()
                 }
             }
         }
@@ -51,75 +71,92 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp()
+fun HorizontalList()
 {
-    //CounterPage()
-    SliderPage()
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(2),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(30.dp)
+    )
+    {
+        items(20){
+            index -> RowItems();
+        }
+    }
 }
 
 @Composable
-fun SliderPage()
+fun RowItems()
 {
-    var imageList = listOf(R.drawable.ic_launcher_background, R.drawable.ic_launcher_foreground)
-    var currentIndex by remember { mutableStateOf(0) }
-
     Column (
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.DarkGray),
-        verticalArrangement = Arrangement.SpaceAround
+            .padding(10.dp)
+            .background(Color.Gray)
+    ){
+        val bg_image = painterResource(R.drawable.ic_launcher_background)
+        Image(painter = bg_image, contentDescription = null)
+        Text("Label")
+        Text("Description")
+    }
+}
+///////////////////////////////////////////////////////////////////////
+@Composable
+fun VerticalScrollableList() {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
     ) {
-        Image(
-            painter = painterResource(imageList[currentIndex]),
-            contentDescription = null,
-            modifier = Modifier
-                .size(200.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
-        ){
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = { if(currentIndex > 0) currentIndex--}) {
-                Text("Previous")
-            }
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = { if(currentIndex < imageList.size - 1) currentIndex++}) {
-                Text("Next")
-            }
+        items(20) {
+            ListItem()
         }
     }
 }
 
 @Composable
-fun CounterPage()
-{
-    var counter by remember { mutableStateOf(1) }
-
-    Column (
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center
-    ){
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Button(onClick = {if(counter > 0) counter--}) {
-                Text("counter--")
-            }
-            Text("$counter",
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold)
-            Button(onClick = {counter++}) {
-                Text("counter++")
-            }
+fun ListItem() {
+    Surface(
+        color = Color.LightGray,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text("Item Header")
+            Text("Item Description")
+            Text("Additional Info")
         }
     }
 }
+
+////////////////////////////////////////////////////////////////////
+@Composable
+fun VerticalGridList() {
+    val itemCount = 100 // Заданное количество элементов списка
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(8.dp)
+    ) {
+        items(itemCount) { index ->
+            GridItem()
+        }
+    }
+}
+
+@Composable
+fun GridItem() {
+    Card(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(text = "Title")
+            Text(text = "Description")
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
